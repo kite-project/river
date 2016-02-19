@@ -24,11 +24,13 @@ h1, h3, p {
   height: 100%;
   overflow: hidden;
 
-  transform: scale(0.8);
+  /*transform: scale(0.8);*/
   background: white;
 }
 
 #fullscreen-toggle {
+  display: none;
+
   position: absolute;
   top: calc(50% - 50px);
   left: calc(50% - 100px);
