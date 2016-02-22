@@ -106,6 +106,10 @@
   background: rgba(0, 0, 0, 0.1);
 }
 
+.pre .cell .visual {
+  order: 3;
+}
+
 .cell .close {
   position: absolute;
   top: 0;
