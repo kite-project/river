@@ -4,6 +4,7 @@
   <title>River</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <link rel="stylesheet" href="node_modules/kite-icons/kite-icons.css">
   <script src="node_modules/dom-scheduler/dom-scheduler.js"></script>
 
   <link rel="stylesheet" href="fonts/fira.css">
@@ -11,197 +12,22 @@
   <link rel="stylesheet" href="css/demo.css">
   <link rel="stylesheet" href="css/river.css">
   <script defer src="js/demo.js"></script>
+  <script defer src="js/navigation.js"></script>
   <script defer src="js/river.js"></script>
 </head>
 <body>
   <div id="screen">
     <div id="river">
       <div id="flow">
-        <section class="pre">
-          <div class="row">
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-          </div>
-          <h1>History</h1>
-        </section>
-        <section class="pre">
-          <div class="row">
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-            <div class="cell">
-              <h3>Title</h3>
-              <p>Description</p>
-              <div class="visual">
-              </div>
-            </div>
-          </div>
-          <h1>Collections</h1>
-        </section>
-        <section id="tabs">
-          <div class="row">
-            <div class="cell">
-              <div class="close">
-              </div>
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="close">
-              </div>
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="close">
-              </div>
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="close">
-              </div>
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-          </div>
-        </section>
-        <section>
-          <h1>Queue</h1>
-          <div class="row">
-            <div class="cell" style="height:1152px;">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-          </div>
-        </section>
-        <section>
-          <h1>Discovery</h1>
-          <div class="row">
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-            <div class="cell">
-              <div class="visual">
-              </div>
-              <h3>Title</h3>
-              <p>Description</p>
-            </div>
-          </div>
-        </section>
       </div>
       <div id="shortcuts">
-        <a href="#">history</a>
-        <a href="#">collection</a>
-        <a href="#">tabs</a>
-        <a href="#">queue</a>
-        <a href="#">discovery</a>
+        <div id="indicator">
+        </div>
       </div>
-      <div id="new-tab">
+      <button id="new-tab">
+      </button>
       </div>
     </div>
   </div>
-
-  <button id="fullscreen-toggle">
-    Go fullscreen
-  </button>
 </body>
 </html>

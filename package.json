@@ -2,7 +2,8 @@
   "name": "river",
   "version": "0.0.1",
   "dependencies": {
-    "dom-scheduler": "^2.0.0"
+    "dom-scheduler": "^2.1.0",
+    "kite-icons": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.4.1",

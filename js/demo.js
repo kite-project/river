@@ -1,16 +1,8 @@
 (function() {
 
-var fullscreenToggle = document.getElementById('fullscreen-toggle');
-var screen = document.getElementById('screen');
-
-fullscreenToggle.addEventListener('click', () => {
-  screen.requestFullscreen();
-});
-
-
 addEventListener('load', () => replyToChrome('system-message-listener-ready'));
 
-var remoteDebugging = false;
+var remoteDebugging = true;
 if (!remoteDebugging) return;
 
 navigator.mozSettings.createLock().set({

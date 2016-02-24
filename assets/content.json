@@ -1,0 +1,310 @@
+{
+  "history": {
+    "timeline": "pre",
+    "rows": [
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/H1.png",
+            "title": "Medium",
+            "description": "The Easy Way to Learn Hard Stuff"
+          },
+          {
+            "visual": "assets/screenshots/H2.png",
+            "title": "MACIEJ JUCIARA",
+            "description": "Concept Artist"
+          },
+          {
+            "visual": "assets/screenshots/H3.png",
+            "title": "Ash Thorp",
+            "description": "Project 2501: Homage to Ghost in…"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/H4.png",
+            "title": "Jan masny",
+            "description": "Fashion Photography"
+          },
+          {
+            "visual": "assets/screenshots/H5.png",
+            "title": "architizer",
+            "description": "The BLOCK House"
+          },
+          {
+            "visual": "assets/screenshots/H6.png",
+            "title": "TEEHAN + LAX",
+            "description": "Defining User Experience"
+          }
+        ]
+      }
+    ]
+  },
+  "collections": {
+    "timeline": "pre",
+    "rows": [
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/C1.png",
+            "title": "food",
+            "description": "Rustic Vegan"
+          },
+          {
+            "visual": "assets/screenshots/C2.png",
+            "title": "Artists",
+            "description": "James Jean"
+          },
+          {
+            "visual": "assets/screenshots/C3.png",
+            "title": "Video games",
+            "description": "Overwatch"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/C4.png",
+            "title": "photography",
+            "description": "Jan Masny Fashion"
+          },
+          {
+            "visual": "assets/screenshots/C5.png",
+            "title": "Architecture",
+            "description": "Artchitizer"
+          },
+          {
+            "visual": "assets/screenshots/C6.png",
+            "title": "Design",
+            "description": "Frail"
+          }
+        ]
+      }
+    ]
+  },
+  "tabs": {
+    "timeline": "current",
+    "rows": [
+      {
+        "minHeight": 170,
+        "cells": [
+          {
+            "visual": "assets/screenshots/T1.png",
+            "title": "Interior design",
+            "description": ""
+          },
+          {
+            "visual": "assets/screenshots/T2.png",
+            "title": "Ash thorp",
+            "description": ""
+          },
+          {
+            "visual": "assets/screenshots/T4.png",
+            "title": "Adobe remix",
+            "description": ""
+          },
+          {
+            "visual": "assets/screenshots/T3.png",
+            "title": "the verge",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  "queue": {
+    "rows": [
+      {
+        "minHeight": 720,
+        "cells": [
+          {
+            "visual": "assets/screenshots/Q1.png",
+            "title": "Cars vs drones",
+            "description": "Bacon ipsum dolor amet chuck jerky filet mignon ribeye picanha corned beef sausage flank meatball turducken cow ground round sirloin. Beef ribs short loin pork sirloin, pancetta ham hock pastrami ham picanha. Tenderloin pork loin sirloin jerky ground round ribeye salami. Spare ribs ham shank alcatra jowl picanha tenderloin chuck."
+          }
+        ]
+      },
+      {
+        "minHeight": 720,
+        "cells": [
+          {
+            "visual": "assets/screenshots/Q2.png",
+            "title": "the 12 greatest challenges for space exploration",
+            "description": "Bacon ipsum dolor amet chuck jerky filet mignon ribeye picanha corned beef sausage flank meatball turducken cow ground round sirloin. Beef ribs short loin pork sirloin, pancetta ham hock pastrami ham picanha. Tenderloin pork loin sirloin jerky ground round ribeye salami. Spare ribs ham shank alcatra jowl picanha tenderloin chuck."
+          }
+        ]
+      }
+    ]
+  },
+  "discovery": {
+    "rows": [
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D1.png",
+            "title": "the verge",
+            "description": "How will Full Frontal with Bee?"
+          },
+          {
+            "visual": "assets/screenshots/D2.png",
+            "title": "The verge",
+            "description": "How reusable rockets work"
+          },
+          {
+            "visual": "assets/screenshots/D3.png",
+            "title": "loish.net",
+            "description": "The Art of Loish"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D4.png",
+            "title": "vimeo",
+            "description": "Cool video"
+          },
+          {
+            "visual": "assets/screenshots/D5.png",
+            "title": "Charlie bowater",
+            "description": "Is thursty."
+          },
+          {
+            "visual": "assets/screenshots/D6.png",
+            "title": "javier pardina",
+            "description": "On the Road"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D7.jpg",
+            "title": "the verge",
+            "description": "Hanging out with the adorable"
+          },
+          {
+            "visual": "assets/screenshots/D10.jpg",
+            "title": "medium",
+            "description": "Being Queen's Roadie"
+          },
+          {
+            "visual": "assets/screenshots/D9.jpg",
+            "title": "the verge",
+            "description": "Ava DuVernay will direct"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D8.jpg",
+            "title": "the verge",
+            "description": "Street Fighter V will be great"
+          },
+          {
+            "visual": "assets/screenshots/D20.jpg",
+            "title": "design42day",
+            "description": "Horological MAchine"
+          },
+          {
+            "visual": "assets/screenshots/D15.jpg",
+            "title": "polygon",
+            "description": "Doctor Who"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D16.jpg",
+            "title": "team liquid",
+            "description": "Proleague 2016"
+          },
+          {
+            "visual": "assets/screenshots/D14.jpg",
+            "title": "polygon",
+            "description": "Sonic the Hedgehog"
+          },
+          {
+            "visual": "assets/screenshots/D12.jpg",
+            "title": "medium",
+            "description": "How the Become the Best"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D13.jpg",
+            "title": "polygon",
+            "description": "X-men"
+          },
+          {
+            "visual": "assets/screenshots/D17.jpg",
+            "title": "team liquid",
+            "description": "Code S Round"
+          },
+          {
+            "visual": "assets/screenshots/D18.jpg",
+            "title": "team liquid",
+            "description": "BNSL Finals Recap"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D19.jpg",
+            "title": "design42day",
+            "description": "High-tech industry aims"
+          },
+          {
+            "visual": "assets/screenshots/D11.jpg",
+            "title": "medium",
+            "description": "7 Ways to Instantly feel"
+          },
+          {
+            "visual": "assets/screenshots/D21.jpg",
+            "title": "design42day",
+            "description": "Back to basics"
+          }
+        ]
+      },
+      {
+        "minHeight": 232,
+        "cells": [
+          {
+            "visual": "assets/screenshots/D22.jpg",
+            "title": "toronto life",
+            "description": "House of the Week"
+          },
+          {
+            "visual": "assets/screenshots/D23.jpg",
+            "title": "toronto life",
+            "description": "The best lunch"
+          },
+          {
+            "visual": "assets/screenshots/D24.jpg",
+            "title": "toronto life",
+            "description": "The core's"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -4,4 +4,4 @@ clean:
 
 .PHONY: profile
 profile:
-	zip -r -9 profile/webapps/system.gaiamobile.org/application.zip css fonts js index.html node_modules manifest.webapp
+	zip -r -9 profile/webapps/system.gaiamobile.org/application.zip css assets fonts js index.html node_modules manifest.webapp

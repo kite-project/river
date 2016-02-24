@@ -16,6 +16,12 @@ h1, h3, p {
   padding: 0;
 }
 
+button, form, a {
+  outline: 0;
+  border: 0;
+  border-radius: 0;
+}
+
 #screen {
   position: absolute;
   top: 0;
@@ -24,16 +30,5 @@ h1, h3, p {
   height: 100%;
   overflow: hidden;
 
-  /*transform: scale(0.8);*/
   background: white;
-}
-
-#fullscreen-toggle {
-  display: none;
-
-  position: absolute;
-  top: calc(50% - 50px);
-  left: calc(50% - 100px);
-  width: 200px;
-  height: 100px;
 }
