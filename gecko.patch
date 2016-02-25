@@ -1,0 +1,430 @@
+# HG changeset patch
+# User Etienne Segonzac <etienne@segonzac.info>
+# Parent  789a12291942763bc1e3a89f97e0b82dc1c9d00b
+Kite tweaks.
+
+diff --git a/b2g/chrome/content/shell.html b/b2g/chrome/content/shell.html
+--- a/b2g/chrome/content/shell.html
++++ b/b2g/chrome/content/shell.html
+@@ -1,24 +1,16 @@
+ <!DOCTYPE html>
+ <!-- This Source Code Form is subject to the terms of the Mozilla Public
+    - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+    - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+ 
+ <html xmlns="http://www.w3.org/1999/xhtml"
+       id="shell"
+       windowtype="navigator:browser"
+-#ifdef ANDROID
+-      sizemode="fullscreen"
+-#endif
+-#ifdef MOZ_GRAPHENE
+-      macanimationtype="document"
+-      fullscreenbutton="true"
+-      chromemargin="0,0,0,0"
+-#endif
+       >
+ 
+ <head>
+   <link rel="stylesheet" href="shell.css" type="text/css">
+   <script type="text/javascript">
+   <!-- Add raptor performance marker -->
+   window.performance.mark('gecko-shell-html-load');
+   </script>
+diff --git a/layout/generic/nsGfxScrollFrame.cpp b/layout/generic/nsGfxScrollFrame.cpp
+--- a/layout/generic/nsGfxScrollFrame.cpp
++++ b/layout/generic/nsGfxScrollFrame.cpp
+@@ -4029,16 +4029,27 @@ ScrollFrameHelper::FireScrollPortEvent()
+                                                      mVerticalOverflow) ?
+     eScrollPortOverflow : eScrollPortUnderflow, nullptr);
+   event.orient = orient;
+   return EventDispatcher::Dispatch(mOuter->GetContent(),
+                                    mOuter->PresContext(), &event);
+ }
+ 
+ void
++ScrollFrameHelper::FireScrollEndEvent()
++{
++  if (Preferences::GetBool("dom.event.scrollend.enabled", false)) {
++    nsContentUtils::DispatchTrustedEvent(mOuter->GetContent()->OwnerDoc(),
++                                         mOuter->GetContent(),
++                                         NS_LITERAL_STRING("scrollend"),
++                                         true, false);
++  }
++}
++
++void
+ ScrollFrameHelper::ReloadChildFrames()
+ {
+   mScrolledFrame = nullptr;
+   mHScrollbarBox = nullptr;
+   mVScrollbarBox = nullptr;
+   mScrollCornerBox = nullptr;
+   mResizerBox = nullptr;
+ 
+diff --git a/layout/generic/nsGfxScrollFrame.h b/layout/generic/nsGfxScrollFrame.h
+--- a/layout/generic/nsGfxScrollFrame.h
++++ b/layout/generic/nsGfxScrollFrame.h
+@@ -63,16 +63,17 @@ public:
+   // reload our child frame list.
+   // We need this if a scrollbar frame is recreated.
+   void ReloadChildFrames();
+ 
+   nsresult CreateAnonymousContent(
+     nsTArray<nsIAnonymousContentCreator::ContentInfo>& aElements);
+   void AppendAnonymousContentTo(nsTArray<nsIContent*>& aElements, uint32_t aFilter);
+   nsresult FireScrollPortEvent();
++  void FireScrollEndEvent();
+   void PostOverflowEvent();
+   void Destroy();
+ 
+   void BuildDisplayList(nsDisplayListBuilder*   aBuilder,
+                         const nsRect&           aDirtyRect,
+                         const nsDisplayListSet& aLists);
+ 
+   void AppendScrollPartsTo(nsDisplayListBuilder*   aBuilder,
+@@ -345,16 +346,19 @@ public:
+   bool ShouldClampScrollPosition() const;
+ 
+   bool IsAlwaysActive() const;
+   void MarkRecentlyScrolled();
+   void MarkNotRecentlyScrolled();
+   nsExpirationState* GetExpirationState() { return &mActivityExpirationState; }
+ 
+   void SetTransformingByAPZ(bool aTransforming) {
++    if (mTransformingByAPZ && !aTransforming) {
++      FireScrollEndEvent();
++    }
+     mTransformingByAPZ = aTransforming;
+     if (!mozilla::css::TextOverflow::HasClippedOverflow(mOuter)) {
+       // If the block has some text-overflow stuff we should kick off a paint
+       // because we have special behaviour for it when APZ scrolling is active.
+       mOuter->SchedulePaint();
+     }
+   }
+   bool IsTransformingByAPZ() const {
+diff --git a/mobile/android/b2gdroid/app/b2gdroid.js b/mobile/android/b2gdroid/app/b2gdroid.js
+--- a/mobile/android/b2gdroid/app/b2gdroid.js
++++ b/mobile/android/b2gdroid/app/b2gdroid.js
+@@ -279,16 +279,17 @@ pref("browser.search.order.US.1", "chrom
+ pref("browser.search.order.US.2", "chrome://browser/locale/region.properties");
+ pref("browser.search.order.US.3", "chrome://browser/locale/region.properties");
+ 
+ // disable updating
+ pref("browser.search.update", false);
+ 
+ // enable tracking protection for private browsing
+ pref("privacy.trackingprotection.pbmode.enabled", true);
++pref("privacy.trackingprotection.enabled", true);
+ 
+ // disable search suggestions by default
+ pref("browser.search.suggest.enabled", false);
+ pref("browser.search.suggest.prompted", false);
+ 
+ // Tell the search service to load search plugins from the locale JAR
+ pref("browser.search.loadFromJars", true);
+ pref("browser.search.jarURIs", "chrome://browser/locale/searchplugins/");
+@@ -404,16 +405,18 @@ pref("javascript.options.mem.high_water_
+ pref("dom.max_chrome_script_run_time", 0); // disable slow script dialog for chrome
+ pref("dom.max_script_run_time", 20);
+ 
+ // JS error console
+ pref("devtools.errorconsole.enabled", false);
+ // Absolute path to the devtools unix domain socket file used
+ // to communicate with a usb cable via adb forward.
+ pref("devtools.debugger.unix-domain-socket", "/data/data/org.mozilla.b2gdroid/firefox-debugger-socket");
++pref("devtools.debugger.forbid-certified-apps", false);
++pref("dom.event.scrollend.enabled", true);
+ 
+ pref("devtools.remote.usb.enabled", false);
+ pref("devtools.remote.wifi.enabled", false);
+ 
+ pref("font.size.inflation.minTwips", 0);
+ 
+ // When true, zooming will be enabled on all sites, even ones that declare user-scalable=no.
+ pref("browser.ui.zoom.force-user-scalable", false);
+diff --git a/mobile/android/b2gdroid/app/src/main/AndroidManifest.xml b/mobile/android/b2gdroid/app/src/main/AndroidManifest.xml
+--- a/mobile/android/b2gdroid/app/src/main/AndroidManifest.xml
++++ b/mobile/android/b2gdroid/app/src/main/AndroidManifest.xml
+@@ -1,15 +1,15 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+       package="org.mozilla.b2gdroid"
+       android:installLocation="auto"
+       >
+     <uses-sdk android:minSdkVersion="9"
+-              android:targetSdkVersion="22"/>
++              android:targetSdkVersion="23"/>
+ 
+     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+     <uses-permission android:name="android.permission.INTERNET"/>
+     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+@@ -63,16 +63,17 @@
+     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+ 
+     <application android:label="@string/b2g"
+                  android:icon="@drawable/b2g"
+                  android:logo="@drawable/b2g"
+                  android:hardwareAccelerated="true"
++                 android:theme="@style/AppTheme"
+                  android:debuggable="true">
+ 
+         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
+ 
+         <!-- Listen for incoming SMS messages -->
+         <receiver android:name="org.mozilla.gecko.GeckoSmsManager"
+                   android:permission="android.permission.BROADCAST_SMS">
+             <intent-filter>
+@@ -98,41 +99,25 @@
+                 <category android:name="android.intent.category.DEFAULT" />
+                 <data android:scheme="sms" />
+                 <data android:scheme="smsto" />
+                 <data android:scheme="mms" />
+                 <data android:scheme="mmsto" />
+             </intent-filter>
+         </service>
+ 
++        <!-- inherit from the material theme -->
+         <activity android:name="org.mozilla.b2gdroid.Launcher"
+-                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                   android:icon="@drawable/b2g"
+-                  android:label="@string/b2g"
+-                  android:launchMode="singleInstance"
+-                  android:clearTaskOnLaunch="true"
+-                  android:stateNotNeeded="true">
++                  android:label="@string/b2g">
+ 
+-            <!-- Set up as a homescreen replacement -->
++
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+-                <category android:name="android.intent.category.HOME" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-            </intent-filter>
+-
+-            <!-- Handle SMS intents -->
+-            <intent-filter>
+-                <action android:name="android.intent.action.SEND" />
+-                <action android:name="android.intent.action.SENDTO" />
+-                <category android:name="android.intent.category.DEFAULT" />
+-                <category android:name="android.intent.category.BROWSABLE" />
+-                <data android:scheme="sms" />
+-                <data android:scheme="smsto" />
+-                <data android:scheme="mms" />
+-                <data android:scheme="mmsto" />
++                <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+ 
+             <!-- Default browser intents -->
+             <intent-filter>
+                 <action android:name="android.intent.action.VIEW" />
+                 <category android:name="android.intent.category.DEFAULT" />
+                 <category android:name="android.intent.category.BROWSABLE" />
+                 <data android:scheme="http" />
+diff --git a/mobile/android/b2gdroid/app/src/main/java/org/mozilla/b2gdroid/Launcher.java b/mobile/android/b2gdroid/app/src/main/java/org/mozilla/b2gdroid/Launcher.java
+--- a/mobile/android/b2gdroid/app/src/main/java/org/mozilla/b2gdroid/Launcher.java
++++ b/mobile/android/b2gdroid/app/src/main/java/org/mozilla/b2gdroid/Launcher.java
+@@ -112,56 +112,16 @@ public class Launcher extends FragmentAc
+         final View splash = findViewById(R.id.splashscreen);
+         runOnUiThread(new Runnable() {
+             @Override public void run() {
+                 splash.setVisibility(View.GONE);
+             }
+         });
+     }
+ 
+-    private View getStatusBarOverlay() {
+-        if (mDisableStatusBarView != null) {
+-            return mDisableStatusBarView;
+-        }
+-
+-        mDisableStatusBarView = new View(this);
+-
+-        mDisableStatusBarView.setOnTouchListener(new View.OnTouchListener() {
+-            public boolean onTouch(View view, MotionEvent ev) {
+-                // Pass the touch event down to the GeckoView
+-                Launcher.this.findViewById(R.id.gecko_view).dispatchTouchEvent(ev);
+-                return true;
+-            }
+-        });
+-
+-        WindowManager.LayoutParams handleParams = new WindowManager.LayoutParams(
+-                // Fill the width of the screen
+-                WindowManager.LayoutParams.FILL_PARENT,
+-                // Arbitrary value to cover the edge of the top of the screen to interrupt the gesture.
+-                // This value was found through trial and error on a large screen L and a Z3C on KK
+-                25,
+-                // display over everything
+-                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+-                // Prevent events from capturing in other views beneath this
+-                // one
+-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+-                // Allows the View to receive touch events so we can pass them
+-                // to Gecko
+-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+-                // Draw over status bar area
+-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+-                // Draw transparent
+-                PixelFormat.TRANSPARENT);
+-
+-        handleParams.gravity = Gravity.TOP;
+-        WindowManager manager = ((WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
+-        manager.addView(mDisableStatusBarView, handleParams);
+-        return mDisableStatusBarView;
+-    }
+-
+     /** Called when the activity is first created. */
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         Log.w(LOGTAG, "onCreate");
+         super.onCreate(savedInstanceState);
+ 
+         IntentHelper.init(this);
+         mScreenStateObserver = new ScreenStateObserver(this);
+@@ -181,19 +141,16 @@ public class Launcher extends FragmentAc
+             "Launcher:Ready");
+ 
+         // Register the RemoteGeckoEventProxy with the Notification Opened
+         // event, Notifications are handled in a different process as a
+         // service, so we need to forward them to the remote service
+         EventDispatcher.getInstance().registerGeckoThreadListener(mGeckoEventProxy,
+             "Android:NotificationOpened");
+ 
+-        // Initialize status bar overlay
+-        getStatusBarOverlay();
+-
+         setContentView(R.layout.launcher);
+ 
+         mHomeCount = 0;
+         mFirstHome = 0;
+         mLastHome = 0;
+     }
+ 
+     @Override
+@@ -283,33 +240,16 @@ public class Launcher extends FragmentAc
+                 Log.wtf(LOGTAG, "Error building Android:Launcher message", ex);
+             }
+             GeckoEvent e = GeckoEvent.createBroadcastEvent("Android:Launcher", obj.toString());
+             GeckoAppShell.sendEventToGecko(e);
+         }
+     }
+ 
+     @Override
+-    public void onWindowFocusChanged(boolean hasFocus) {
+-        Log.d(LOGTAG, "onWindowFocusChanged hasFocus=" + hasFocus);
+-
+-        super.onWindowFocusChanged(hasFocus);
+-        if (hasFocus) {
+-            getStatusBarOverlay().setVisibility(View.VISIBLE);
+-            findViewById(R.id.main_layout).setSystemUiVisibility(
+-                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+-                    );
+-        } else {
+-            getStatusBarOverlay().setVisibility(View.INVISIBLE);
+-        }
+-    }
+-
+-    @Override
+     public void onBackPressed() {
+         GeckoEvent e = GeckoEvent.createBroadcastEvent("Android:Launcher", "{\"action\":\"back-key\"}");
+         GeckoAppShell.sendEventToGecko(e);
+     }
+ 
+     public void handleMessage(String event, JSONObject message) {
+         Log.w(LOGTAG, "Launcher received " + event);
+ 
+diff --git a/mobile/android/b2gdroid/app/src/main/res/layout/launcher.xml b/mobile/android/b2gdroid/app/src/main/res/layout/launcher.xml
+--- a/mobile/android/b2gdroid/app/src/main/res/layout/launcher.xml
++++ b/mobile/android/b2gdroid/app/src/main/res/layout/launcher.xml
+@@ -1,13 +1,13 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++              android:layout_width="match_parent"
++              android:layout_height="match_parent"
+               android:orientation="vertical"
+-              android:layout_width="fill_parent"
+-              android:layout_height="fill_parent"
+               android:id="@+id/main_layout">
+ 
+   <org.mozilla.gecko.GeckoView android:id="@+id/gecko_view"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"/>
+ 
+ <RelativeLayout android:id="@+id/splashscreen"
+                         android:layout_width="match_parent"
+diff --git a/mobile/android/b2gdroid/app/src/main/res/values-v21/styles.xml b/mobile/android/b2gdroid/app/src/main/res/values-v21/styles.xml
+new file mode 100644
+--- /dev/null
++++ b/mobile/android/b2gdroid/app/src/main/res/values-v21/styles.xml
+@@ -0,0 +1,14 @@
++<resources>
++    <!-- Base application theme. -->
++    <style name="AppTheme" parent="android:style/Theme.Material">
++        <!-- Customize your theme here. -->
++        <item name="android:colorPrimary">@color/colorPrimary</item>
++        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
++        <item name="android:colorAccent">@color/colorAccent</item>
++        <item name="android:windowNoTitle">true</item>
++        <item name="android:statusBarColor">#eeeeee</item>
++        <item name="android:navigationBarColor">#000000</item>
++        <item name="android:windowBackground">@color/colorPrimary</item>
++        <item name="android:windowLightStatusBar">true</item>
++    </style>
++</resources>
+diff --git a/mobile/android/b2gdroid/app/src/main/res/values/colors.xml b/mobile/android/b2gdroid/app/src/main/res/values/colors.xml
+new file mode 100644
+--- /dev/null
++++ b/mobile/android/b2gdroid/app/src/main/res/values/colors.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <color name="colorPrimary">#FFFFFF</color>
++    <color name="colorPrimaryDark">#FEFEFE</color>
++    <color name="colorAccent">#333333</color>
++</resources>
+diff --git a/mobile/android/b2gdroid/app/src/main/res/values/strings.xml b/mobile/android/b2gdroid/app/src/main/res/values/strings.xml
+--- a/mobile/android/b2gdroid/app/src/main/res/values/strings.xml
++++ b/mobile/android/b2gdroid/app/src/main/res/values/strings.xml
+@@ -1,11 +1,11 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <resources>
+ 
+-  <string name="b2g">Firefox OS developer preview</string>
++  <string name="b2g">Kite</string>
+ 
+   <!-- If MMS discovers there isn't much space left on the device, it will show a toast with this message. -->
+   <string name="low_memory" product="tablet">Tablet storage is full! Delete some files to free space.</string>
+   <!-- If MMS discovers there isn't much space left on the device, it will show a toast with this message. -->
+   <string name="low_memory" product="default">Phone storage is full! Delete some files to free space.</string>
+ 
+ </resources>
+diff --git a/modules/libpref/init/all.js b/modules/libpref/init/all.js
+--- a/modules/libpref/init/all.js
++++ b/modules/libpref/init/all.js
+@@ -1133,16 +1133,18 @@ pref("privacy.trackingprotection.pbmode.
+ pref("dom.event.contextmenu.enabled",       true);
+ pref("dom.event.clipboardevents.enabled",   true);
+ #if defined(XP_WIN) && !defined(RELEASE_BUILD) || defined(MOZ_WIDGET_GTK) && !defined(RELEASE_BUILD)
+ pref("dom.event.highrestimestamp.enabled",  true);
+ #else
+ pref("dom.event.highrestimestamp.enabled",  false);
+ #endif
+ 
++pref("dom.event.scrollend.enabled",         false);
++
+ pref("dom.webcomponents.enabled",           false);
+ 
+ pref("javascript.enabled",                  true);
+ pref("javascript.options.strict",           false);
+ #ifdef DEBUG
+ pref("javascript.options.strict.debug",     false);
+ #endif
+ pref("javascript.options.baselinejit",      true);
