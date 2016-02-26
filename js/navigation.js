@@ -27,10 +27,8 @@ window.onScrollEnd = function onScrollEnd() {
   scheduler.mutation(() => {
     var target = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
     var section = target.closest('section');
-    // XXX cheat
     if (!section) {
-      target = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2 + 100);
-      section = target.closest('section');
+      return;
     }
     return parseInt(section.dataset.index);
   }).then(moveIndicatorToSection);
@@ -40,8 +38,10 @@ river.addEventListener('scrollend', onScrollEnd);
 
 var currentIndex = 0;
 function moveIndicatorToSection(index) {
+  if (typeof(index) == 'undefined') return;
+
   var delta = Math.abs(index - currentIndex);
-  if (delta === 0) return;
+  if (!delta) return;
 
   indicator.style.transitionDuration = `${delta * 300}ms`;
   currentIndex = index;
@@ -77,7 +77,6 @@ window.scrollToSection = function(id) {
     scheduler.mutation(() => {
       return elem.offsetTop + firstRow.offsetHeight / 2 - window.innerHeight / 2;
     }).then(destination => {
-      console.log("destination", destination);
       river.scrollTo({
         top: destination,
         behavior: 'smooth'

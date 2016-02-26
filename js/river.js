@@ -87,6 +87,10 @@ function addRow(container, content) {
 function addCell(container, content) {
   var dom = document.createElement('div');
   dom.classList.add('cell');
+  if (content.link) {
+    dom.classList.add('link');
+    dom.dataset.link = content.link;
+  }
 
   var close = document.createElement('button');
   close.classList.add('close');
@@ -96,6 +100,10 @@ function addCell(container, content) {
   var img = document.createElement('div');
   img.classList.add('img');
   img.style.backgroundImage = `url(${content.visual})`;
+  var iframe = document.querySelector(`#window-manager iframe[src="${content.link}"]`);
+  if (iframe) {
+    img.style.backgroundImage = `-moz-element(#${iframe.id})`;
+  }
   dom.appendChild(img);
 
   var title = document.createElement('h3');
@@ -128,5 +136,17 @@ function addShortcutLink(container, content) {
 
   container.appendChild(dom);
 }
+
+var flow = document.getElementById('flow');
+flow.addEventListener('click', evt => {
+  var cell = evt.target.closest('.cell');
+  if (cell && cell.dataset.link) {
+    var evt = new CustomEvent('tab-select', { detail: {
+      target: cell,
+      link: cell.dataset.link
+    }});
+    dispatchEvent(evt);
+  }
+});
 
 })();
