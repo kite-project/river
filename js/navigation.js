@@ -73,9 +73,19 @@ window.scrollToSection = function(id) {
     programaticallyScrolling = true;
 
     var firstRow = elem.querySelector('.row') || elem;
+    var title = elem.querySelector('h1');
 
     scheduler.mutation(() => {
-      return elem.offsetTop + firstRow.offsetHeight / 2 - window.innerHeight / 2;
+      var top = elem.offsetTop + firstRow.offsetHeight / 2;
+
+      if (elem.classList.contains('pre')) {
+        top = elem.offsetTop + elem.offsetHeight - firstRow.offsetHeight / 2;
+        if (title) {
+          top -= title.offsetHeight;
+        }
+      }
+
+      return top - window.innerHeight / 2;
     }).then(destination => {
       river.scrollTo({
         top: destination,
