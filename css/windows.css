@@ -19,6 +19,7 @@
   transform-origin: top left;
   transform: translate(0, 0) scale(1, 1);
   border: 0;
+  background: white;
 }
 
 #window-manager iframe.active {

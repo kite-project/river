@@ -16,10 +16,19 @@ h1, h3, p {
   padding: 0;
 }
 
-button, form, a {
+button, form, a, a:active {
   outline: 0;
   border: 0;
   border-radius: 0;
+}
+
+*::-moz-focusring {
+  border: 0;
+  outline: 0;
+}
+
+button::-moz-focus-inner {
+  border: 0;
 }
 
 #screen {

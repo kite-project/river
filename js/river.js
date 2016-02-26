@@ -99,6 +99,7 @@ function addCell(container, content) {
 
   var img = document.createElement('div');
   img.classList.add('img');
+  img.classList.add('tappable');
   img.style.backgroundImage = `url(${content.visual})`;
   var iframe = document.querySelector(`#window-manager iframe[src="${content.link}"]`);
   if (iframe) {
@@ -137,6 +138,7 @@ function addShortcutLink(container, content) {
   container.appendChild(dom);
 }
 
+var coins = document.getElementById('coins');
 var flow = document.getElementById('flow');
 flow.addEventListener('click', evt => {
   var cell = evt.target.closest('.cell');
@@ -146,7 +148,30 @@ flow.addEventListener('click', evt => {
       link: cell.dataset.link
     }});
     dispatchEvent(evt);
+    return;
   }
+
+  if (evt.target.classList.contains('img')) {
+    scheduler.feedback(() => {
+      evt.target.classList.toggle('tap');
+    }, evt.target, 'animationend').then(() => {
+      return scheduler.transition(() => {
+        coins.classList.toggle('pop');
+      }, coins, 'animationend');
+    });
+  }
+});
+
+var newTab = document.getElementById('new-tab');
+newTab.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  scheduler.feedback(() => {
+    newTab.classList.toggle('tap');
+  }, newTab, 'animationend').then(() => {
+    return scheduler.transition(() => {
+      coins.classList.toggle('pop');
+    }, coins, 'animationend');
+  });
 });
 
 })();

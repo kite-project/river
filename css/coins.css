@@ -1,0 +1,54 @@
+#coins {
+  position: fixed;
+  left: 20%;
+  bottom: 70px;
+  width: 60%;
+  height: 50px;
+
+  color: white;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 50px;
+  font-style: italic;
+  text-align: center;
+
+  border-radius: 0px;
+  background: rgba(0, 0, 0, 0.65);
+
+  animation-duration:  0.4s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 2;
+
+  animation-name: pop-odd;
+  transform: translateY(150px);
+  will-change: opacity;
+}
+
+#coins.pop {
+  animation-name: pop-even;
+}
+
+@keyframes pop-odd {
+  from {
+    transform: translateY(150px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-even {
+  from {
+    transform: translateY(150px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

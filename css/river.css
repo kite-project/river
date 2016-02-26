@@ -229,3 +229,34 @@
 .pre .cell p {
   margin: 0 0 calc(var(--bacon-strip) * 0.5) 0;
 }
+
+.tappable {
+  animation-duration:  0.1s;
+  animation-timing-function: ease;
+  animation-direction: alternate;
+  animation-iteration-count: 2;
+
+  animation-name: tap-odd;
+}
+
+.tappable.tap {
+  animation-name: tap-even;
+}
+
+@keyframes tap-odd {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.75;
+  }
+}
+
+@keyframes tap-even {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.75;
+  }
+}

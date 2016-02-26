@@ -54,14 +54,14 @@ function waitForPaint() {
 }
 
 function grow(iframe) {
-  iframe.style.transition = 'transform 0.5s ease';
+  iframe.style.transition = 'transform 0.35s ease';
   return scheduler.transition(() => {
     iframe.style.transform = '';
   }, iframe, 'transitionend', 750);
 }
 
 function shrink(iframe) {
-  iframe.style.transition = 'transform 0.5s ease';
+  iframe.style.transition = 'transform 0.35s ease';
   return scheduler.transition(() => {
     iframe.style.transform = iframe.dataset.shrinkTransform;
   }, iframe, 'transitionend', 750);
